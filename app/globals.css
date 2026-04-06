@@ -1,0 +1,197 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.75rem;
+}
+
+[data-theme="sage"] {
+  /* Palette: #346739 #79AE6F #9FCB98 #F2EDC2 */
+  --background: #1f2d1c;
+  --foreground: #F2EDC2;
+  --card: #243622;
+  --card-foreground: #F2EDC2;
+  --popover: #243622;
+  --popover-foreground: #F2EDC2;
+  --primary: #79AE6F;
+  --primary-foreground: #1f2d1c;
+  --secondary: #346739;
+  --secondary-foreground: #F2EDC2;
+  --muted: #2c3f27;
+  --muted-foreground: #d6d9c7;
+  --accent: #9FCB98;
+  --accent-foreground: #1f2d1c;
+  --destructive: #c0392b;
+  --destructive-foreground: #F2EDC2;
+  --border: #3f5a36;
+  --input: #2c3f27;
+  --ring: #79AE6F;
+  --chart-1: #79AE6F;
+  --chart-2: #346739;
+  --chart-3: #9FCB98;
+  --chart-4: #F2EDC2;
+  --chart-5: #9FCB98;
+  --sidebar: #1b2a19;
+  --sidebar-foreground: #F2EDC2;
+  --sidebar-primary: #79AE6F;
+  --sidebar-primary-foreground: #1f2d1c;
+  --sidebar-accent: #2c3f27;
+  --sidebar-accent-foreground: #F2EDC2;
+  --sidebar-border: #3f5a36;
+  --sidebar-ring: #79AE6F;
+  --color-available: #79AE6F;
+  --color-hot: #c4813a;
+  --color-live: #79AE6F;
+}
+
+[data-theme="sun-olive"] {
+  /* Palette: #FFDE42 #4C5C2D #313E17 #1B0C0C */
+  --background: #1B0C0C;
+  --foreground: #FFFAE3;
+  --card: #21100f;
+  --card-foreground: #FFFAE3;
+  --popover: #21100f;
+  --popover-foreground: #FFFAE3;
+  --primary: #FFDE42;
+  --primary-foreground: #1B0C0C;
+  --secondary: #4C5C2D;
+  --secondary-foreground: #FFFAE3;
+  --muted: #313E17;
+  --muted-foreground: #d8d3c0;
+  --accent: #FFDE42;
+  --accent-foreground: #1B0C0C;
+  --destructive: #c0392b;
+  --destructive-foreground: #FFFAE3;
+  --border: #363020;
+  --input: #251615;
+  --ring: #FFDE42;
+  --chart-1: #FFDE42;
+  --chart-2: #4C5C2D;
+  --chart-3: #313E17;
+  --chart-4: #1B0C0C;
+  --chart-5: #FFDE42;
+  --radius: 0.75rem;
+  --sidebar: #120807;
+  --sidebar-foreground: #FFFAE3;
+  --sidebar-primary: #FFDE42;
+  --sidebar-primary-foreground: #1B0C0C;
+  --sidebar-accent: #22130f;
+  --sidebar-accent-foreground: #FFFAE3;
+  --sidebar-border: #342018;
+  --sidebar-ring: #FFDE42;
+
+  --color-available: #FFDE42;
+  --color-hot: #E6501B;
+  --color-live: #4C5C2D;
+}
+
+[data-theme="molten"] {
+  /* Palette: #280905 #740A03 #C3110C #E6501B */
+  --background: #1b0503;
+  --foreground: #FFEFEA;
+  --card: #220704;
+  --card-foreground: #FFEFEA;
+  --popover: #220704;
+  --popover-foreground: #FFEFEA;
+  --primary: #E6501B;
+  --primary-foreground: #220704;
+  --secondary: #C3110C;
+  --secondary-foreground: #FFEFEA;
+  --muted: #280905;
+  --muted-foreground: #f2c6be;
+  --accent: #740A03;
+  --accent-foreground: #FFEFEA;
+  --destructive: #C3110C;
+  --destructive-foreground: #FFEFEA;
+  --border: #2f0c07;
+  --input: #280905;
+  --ring: #E6501B;
+  --chart-1: #E6501B;
+  --chart-2: #C3110C;
+  --chart-3: #740A03;
+  --chart-4: #280905;
+  --chart-5: #C3110C;
+  --radius: 0.75rem;
+  --sidebar: #170402;
+  --sidebar-foreground: #FFEFEA;
+  --sidebar-primary: #E6501B;
+  --sidebar-primary-foreground: #220704;
+  --sidebar-accent: #280905;
+  --sidebar-accent-foreground: #FFEFEA;
+  --sidebar-border: #2f0c07;
+  --sidebar-ring: #E6501B;
+
+  --color-available: #E6501B;
+  --color-hot: #C3110C;
+  --color-live: #740A03;
+}
+
+@theme inline {
+  --font-sans: var(--font-sans, 'Nunito'), 'Nunito Fallback', sans-serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-available: var(--color-available);
+  --color-hot: var(--color-hot);
+  --color-live: var(--color-live);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar - uses CSS variables to respond to theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
