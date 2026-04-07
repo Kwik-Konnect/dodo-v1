@@ -9,7 +9,6 @@ import { ProtectedRoute } from "@/components/auth/protected-route";
 import { useAuth } from "@/contexts/auth-context";
 import { Id } from "@/convex/_generated/dataModel";
 import { MessageCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 function MessagesContent() {
   const { user } = useAuth();
@@ -17,7 +16,6 @@ function MessagesContent() {
     id: Id<"conversations">;
     otherUser: { id: Id<"users">; name: string; avatarUrl?: string };
   } | null>(null);
-  const [mobileView, setMobileView] = useState<"list" | "chat">("list");
 
   const getOrCreate = useMutation(api.chat.getOrCreateConversation);
 
@@ -30,20 +28,14 @@ function MessagesContent() {
       if (prev?.id === convId) return prev;
       return { id: convId, otherUser: { id: otherUserId, name: "..." } };
     });
-    setMobileView("chat");
   };
 
   if (!user) return null;
 
   return (
     <div className="flex h-[calc(100vh-3.5rem-4rem)] lg:h-[calc(100vh-3.5rem)]">
-      {/* Sidebar — conversation list */}
-      <div
-        className={cn(
-          "flex h-full w-full flex-col border-r border-border bg-card lg:w-80 lg:flex",
-          mobileView === "chat" ? "hidden lg:flex" : "flex"
-        )}
-      >
+      {/* Sidebar — conversation list always visible */}
+      <div className="flex h-full w-80 min-w-[18rem] flex-col border-r border-border bg-card">
         <div className="flex items-center gap-2 border-b border-border px-4 py-3.5">
           <MessageCircle className="h-5 w-5 text-primary" />
           <h1 className="text-base font-bold text-foreground">Messages</h1>
@@ -60,20 +52,14 @@ function MessagesContent() {
       </div>
 
       {/* Chat window */}
-      <div
-        className={cn(
-          "flex h-full flex-1 flex-col",
-          mobileView === "list" ? "hidden lg:flex" : "flex"
-        )}
-      >
+      <div className="flex h-full flex-1 flex-col">
         {selectedConv ? (
           <ChatWindow
             conversationId={selectedConv.id}
             otherUser={selectedConv.otherUser}
-            onBack={() => setMobileView("list")}
           />
         ) : (
-          <div className="hidden lg:flex h-full flex-col items-center justify-center text-center p-8">
+          <div className="flex h-full flex-col items-center justify-center text-center p-8">
             <div className="rounded-full bg-muted p-6">
               <MessageCircle className="h-10 w-10 text-muted-foreground" />
             </div>

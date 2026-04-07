@@ -29,20 +29,11 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
+      { url: '/sage-light-logo.png', type: 'image/png' },
+      { url: '/sun-and-olive-light-logo.png', type: 'image/png' },
+      { url: '/molten-light-logo.png', type: 'image/png' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/sage-light-logo.png',
   },
 }
 

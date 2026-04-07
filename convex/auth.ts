@@ -118,6 +118,43 @@ export const updateUserProfile = mutation({
   },
 });
 
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+export const updateUserImages = mutation({
+  args: {
+    userId: v.id("users"),
+    avatarStorageId: v.optional(v.id("_storage")),
+    coverStorageId: v.optional(v.id("_storage")),
+  },
+  handler: async (ctx, args) => {
+    const updates: Record<string, unknown> = { updatedAt: Date.now() };
+    const result: { avatarUrl?: string; coverImageUrl?: string } = {};
+
+    if (args.avatarStorageId) {
+      const url = await ctx.storage.getUrl(args.avatarStorageId);
+      if (url) {
+        updates.avatarUrl = url;
+        result.avatarUrl = url;
+      }
+    }
+    if (args.coverStorageId) {
+      const url = await ctx.storage.getUrl(args.coverStorageId);
+      if (url) {
+        updates.coverImageUrl = url;
+        result.coverImageUrl = url;
+      }
+    }
+
+    await ctx.db.patch(args.userId, updates);
+    return result;
+  },
+});
+
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(password);

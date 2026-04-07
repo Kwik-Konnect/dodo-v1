@@ -3,11 +3,11 @@
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { PostComposer } from "@/components/social/post-composer";
-import { FeedPost } from "@/components/social/feed-post";
+import { FeedPost, FeedPostSkeleton } from "@/components/social/feed-post";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { useAuth } from "@/contexts/auth-context";
 import { Id } from "@/convex/_generated/dataModel";
-import { Rss, Loader2 } from "lucide-react";
+import { Rss } from "lucide-react";
 
 function FeedContent() {
   const { user } = useAuth();
@@ -33,8 +33,10 @@ function FeedContent() {
 
       {/* Posts */}
       {!posts ? (
-        <div className="flex justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <div className="space-y-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <FeedPostSkeleton key={i} />
+          ))}
         </div>
       ) : posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">

@@ -165,6 +165,34 @@ export const likePost = mutation({
   },
 });
 
+export const getLikedPosts = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const likes = await ctx.db
+      .query("postLikes")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .order("desc")
+      .take(50);
+
+    const posts = await Promise.all(
+      likes.map(async (like) => {
+        const post = await ctx.db.get(like.postId);
+        if (!post) return null;
+        const author = await ctx.db.get(post.authorId);
+        return {
+          ...post,
+          author: author
+            ? { id: author._id, name: author.name, avatarUrl: author.avatarUrl }
+            : null,
+          isLiked: true,
+        };
+      })
+    );
+
+    return posts.filter((p) => p !== null);
+  },
+});
+
 export const unlikePost = mutation({
   args: {
     userId: v.id("users"),

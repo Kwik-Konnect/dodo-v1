@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Id } from "@/convex/_generated/dataModel";
 import { useAuth } from "@/contexts/auth-context";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface FeedPostProps {
   post: {
@@ -172,6 +173,33 @@ export function FeedPost({ post, onDelete }: FeedPostProps) {
         >
           <Share2 className="h-4 w-4" />
         </button>
+      </div>
+    </article>
+  );
+}
+
+export function FeedPostSkeleton() {
+  return (
+    <article className="rounded-xl border border-border bg-card p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-3 w-32" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+        </div>
+        <Skeleton className="h-8 w-8 rounded-full" />
+      </div>
+      <div className="mt-3 space-y-2">
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-5/6" />
+        <Skeleton className="h-3 w-3/4" />
+      </div>
+      <div className="mt-4 flex items-center gap-4 border-t border-border pt-3">
+        <Skeleton className="h-4 w-16" />
+        <Skeleton className="h-4 w-14" />
+        <Skeleton className="h-4 w-12 ml-auto" />
       </div>
     </article>
   );

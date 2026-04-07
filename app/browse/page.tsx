@@ -20,12 +20,16 @@ import {
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { FilterSidebar } from "@/components/browse/filter-sidebar";
-import { ProfessionalCard } from "@/components/professional-card";
+import {
+  ProfessionalCard,
+  ProfessionalCardSkeleton,
+} from "@/components/professional-card";
 import { getCategoryById } from "@/lib/data";
 import { formatPrice } from "@/lib/currency";
 import { SwipeView } from "@/components/browse/swipe-view";
 import { SlidersHorizontal, Search, X, LayoutGrid, Flame } from "lucide-react";
 import type { Category } from "@/lib/types";
+import professionalsData from "@/data/professionals.json";
 
 function BrowseContent() {
   const searchParams = useSearchParams();
@@ -51,11 +55,13 @@ function BrowseContent() {
     maxPrice,
     searchQuery,
   });
+  const fallbackProfessionals = professionalsData as any[];
 
   // Client-side sort
   const professionals = useMemo(() => {
-    if (!rawProfessionals) return [];
-    const results = [...rawProfessionals];
+    const source = rawProfessionals ?? fallbackProfessionals;
+    if (!source) return [];
+    const results = [...source];
     switch (sortBy) {
       case "rating":
         results.sort((a, b) => b.rating - a.rating);
@@ -116,7 +122,16 @@ function BrowseContent() {
                 {category ? getCategoryById(category)?.name : "Discover"}
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                {rawProfessionals === undefined ? "Loading..." : `${professionals.length} ${professionals.length !== 1 ? "ladies" : "lady"} available`}
+                {rawProfessionals === undefined && fallbackProfessionals.length === 0 ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-primary/70" />
+                    Loading results...
+                  </span>
+                ) : (
+                  `${professionals.length} ${
+                    professionals.length !== 1 ? "ladies" : "lady"
+                  } available`
+                )}
               </p>
             </div>
             {/* View Toggle */}
@@ -247,9 +262,11 @@ function BrowseContent() {
             )}
 
             {/* Results */}
-            {rawProfessionals === undefined ? (
-              <div className="flex justify-center py-16">
-                <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            {rawProfessionals === undefined && fallbackProfessionals.length === 0 ? (
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, idx) => (
+                  <ProfessionalCardSkeleton key={idx} />
+                ))}
               </div>
             ) : professionals.length > 0 ? (
               viewMode === "swipe" ? (

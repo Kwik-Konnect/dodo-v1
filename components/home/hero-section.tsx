@@ -5,11 +5,19 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, ArrowRight } from "lucide-react";
+import { cloudinaryUrl } from "@/lib/cloudinary";
 
 export function HeroSection() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("");
+  const heroImages = {
+    primary: "girls/1775215902622edited-image",
+    secondary: "girls/1763046071553edited-image",
+    tertiary: "girls/1774305302779edited-image",
+    bottomLeft: "girls/1770314038130edited-image",
+    bottomRight: "girls/1730729028885E51555CF-B4F1-4993-B4CC-296E5C32DDBA",
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +113,7 @@ export function HeroSection() {
               {/* Large image left */}
               <div className="col-span-7 overflow-hidden rounded-3xl shadow-xl shadow-primary/10 ring-1 ring-white/10">
                 <img
-                  src="/girls/1775215902622edited-image.webp"
+                  src={cloudinaryUrl(heroImages.primary, { width: 1200, height: 640, crop: "fill" })}
                   alt="Featured girl"
                   className="h-80 w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
@@ -115,14 +123,14 @@ export function HeroSection() {
               <div className="col-span-5 flex flex-col gap-4">
                 <div className="overflow-hidden rounded-3xl shadow-lg">
                   <img
-                    src="/girls/1763046071553edited-image.webp"
+                    src={cloudinaryUrl(heroImages.secondary, { width: 700, height: 360, crop: "fill" })}
                     alt="Featured girl"
                     className="h-36 w-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                 </div>
                 <div className="overflow-hidden rounded-3xl shadow-lg">
                   <img
-                    src="/girls/1774305302779edited-image.webp"
+                    src={cloudinaryUrl(heroImages.tertiary, { width: 700, height: 400, crop: "fill" })}
                     alt="Featured girl"
                     className="h-40 w-full object-cover transition-transform duration-500 hover:scale-105"
                   />
@@ -132,14 +140,14 @@ export function HeroSection() {
               {/* Bottom row */}
               <div className="col-span-5 overflow-hidden rounded-3xl shadow-lg">
                 <img
-                  src="/girls/1770314038130edited-image.webp"
+                  src={cloudinaryUrl(heroImages.bottomLeft, { width: 760, height: 280, crop: "fill" })}
                   alt="Featured girl"
                   className="h-32 w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
               <div className="col-span-7 overflow-hidden rounded-3xl shadow-lg">
                 <img
-                  src="/girls/1730729028885E51555CF-B4F1-4993-B4CC-296E5C32DDBA.jpeg"
+                  src={cloudinaryUrl(heroImages.bottomRight, { width: 1040, height: 280, crop: "fill" })}
                   alt="Featured girl"
                   className="h-32 w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
@@ -152,14 +160,14 @@ export function HeroSection() {
             <div className="grid grid-cols-2 gap-3">
               <div className="overflow-hidden rounded-2xl shadow-md">
                 <img
-                  src="/girls/1775215902622edited-image.webp"
+                  src={cloudinaryUrl(heroImages.primary, { width: 600, height: 320, crop: "fill" })}
                   alt="Featured girl"
                   className="h-28 w-full object-cover"
                 />
               </div>
               <div className="overflow-hidden rounded-2xl shadow-md">
                 <img
-                  src="/girls/1763046071553edited-image.webp"
+                  src={cloudinaryUrl(heroImages.secondary, { width: 600, height: 320, crop: "fill" })}
                   alt="Featured girl"
                   className="h-28 w-full object-cover"
                 />

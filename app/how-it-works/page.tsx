@@ -32,18 +32,6 @@ const steps = [
       "Send messages to professionals to discuss your specific needs, ask questions, and ensure they're the right fit for your project.",
   },
   {
-    icon: Calendar,
-    title: "Book & Schedule",
-    description:
-      "Choose your preferred service, select a convenient date and time, and book directly through the platform with just a few clicks.",
-  },
-  {
-    icon: CreditCard,
-    title: "Secure Payment",
-    description:
-      "Pay securely through our platform using Monime. Your payment is protected and only released to the professional after service completion.",
-  },
-  {
     icon: Star,
     title: "Rate & Review",
     description:

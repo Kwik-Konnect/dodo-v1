@@ -8,16 +8,14 @@ import {
   Star,
   HelpCircle,
   Mail,
-  Download,
-  Ban,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeLogo } from "@/components/layout/theme-logo";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/browse", label: "Browse", icon: Search, badge: "!" },
   { href: "/reviews", label: "Reviews", icon: Star },
-  { href: "/blacklisted", label: "Blacklisted", icon: Ban },
   { href: "/how-it-works", label: "How It Works", icon: HelpCircle },
   { href: "/contact", label: "Contact", icon: Mail },
 ];
@@ -29,10 +27,7 @@ export function Sidebar() {
     <aside className="fixed left-0 top-0 z-40 hidden h-screen w-[200px] flex-col border-r border-sidebar-border bg-sidebar lg:flex">
       {/* Logo */}
       <div className="flex h-16 items-center gap-2.5 border-b border-sidebar-border px-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
-          <span className="text-lg font-bold text-primary-foreground">D</span>
-        </div>
-        <span className="text-xl font-bold text-sidebar-foreground">Dodo</span>
+        <ThemeLogo className="h-9 w-auto" />
       </div>
 
       {/* Navigation */}
@@ -77,16 +72,6 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      {/* Bottom CTA */}
-      <div className="border-t border-sidebar-border p-4">
-        <Link
-          href="/join"
-          className="flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
-        >
-          <Download className="h-4 w-4" />
-          Create Profile
-        </Link>
-      </div>
     </aside>
   );
 }

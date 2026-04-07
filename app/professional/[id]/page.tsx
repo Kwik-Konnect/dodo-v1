@@ -16,6 +16,7 @@ import { ReviewsSection } from "@/components/profile/reviews-section";
 import { formatPrice } from "@/lib/currency";
 import { MessageCircle, Calendar } from "lucide-react";
 import type { Service } from "@/lib/types";
+import { ProfileSkeleton } from "@/components/profile/profile-skeleton";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -34,19 +35,19 @@ export default function ProfessionalPage({ params }: PageProps) {
   }
 
   if (professional === undefined) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
-  const handleSelectService = (service: Service) => {
-    router.push(`/book/${professional.id}?service=${service.id}`);
+  const bookingDisabled = true;
+
+  const handleSelectService = (_service: Service) => {
+    if (!bookingDisabled) {
+      router.push(`/book/${professional.id}?service=${_service.id}`);
+    }
   };
 
   const handleBookNow = () => {
-    if (professional.services.length > 0) {
+    if (!bookingDisabled && professional.services.length > 0) {
       router.push(`/book/${professional.id}`);
     }
   };
@@ -97,9 +98,10 @@ export default function ProfessionalPage({ params }: PageProps) {
                       size="lg"
                       className="w-full rounded-xl"
                       onClick={handleBookNow}
+                      disabled={bookingDisabled}
                     >
                       <Calendar className="mr-2 h-5 w-5" />
-                      Book Now
+                      {bookingDisabled ? "Bookings temporarily unavailable" : "Book Now"}
                     </Button>
                     <Button
                       variant="outline"

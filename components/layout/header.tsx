@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
+import { ThemeLogo } from "@/components/layout/theme-logo";
 
 function timeAgo(ts: number) {
   const s = Math.floor((Date.now() - ts) / 1000);
@@ -147,12 +148,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-30 w-full border-b border-border bg-background/95 text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="flex h-14 items-center justify-between gap-4 px-4 sm:px-6">
-        {/* Mobile Logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-2 lg:hidden">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/25">
-            <span className="text-base font-bold text-primary-foreground">D</span>
-          </div>
-          <span className="text-lg font-bold text-foreground">Dodo</span>
+        {/* Brand */}
+        <Link href="/" className="flex shrink-0 items-center gap-2">
+          <ThemeLogo className="h-8" priority />
         </Link>
 
         {/* Search Bar */}

@@ -9,15 +9,47 @@ import { api } from "@/convex/_generated/api";
 import { getCategories } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
 import type { Category } from "@/lib/types";
+import professionalsData from "@/data/professionals.json";
 
 export function FeaturedSection() {
   const allFeatured = useQuery(api.professionals.getFeaturedProfessionals, { limit: 12 });
   const categories = getCategories();
   const [activeFilter, setActiveFilter] = useState<Category | "all">("all");
 
-  const filtered = !allFeatured ? [] : activeFilter === "all"
-    ? allFeatured.slice(0, 6)
-    : allFeatured.filter((p) => p.category === activeFilter).slice(0, 6);
+  const fallbackFeatured = professionalsData.slice(0, 12).map((p: any) => ({
+    id: p.id,
+    name: p.name,
+    title: p.title,
+    avatar: p.avatar,
+    coverImage: p.coverImage,
+    bio: p.bio,
+    category: p.category,
+    skills: p.skills,
+    location: p.location,
+    ethnicity: p.ethnicity,
+    rating: p.rating,
+    reviewCount: p.reviewCount,
+    yearsExperience: p.yearsExperience,
+    availability: p.availability,
+    languages: p.languages ?? [],
+    verified: p.verified ?? false,
+    age: p.age ?? 0,
+    bodyType: p.bodyType ?? "",
+    interests: p.interests ?? [],
+    isOnline: p.isOnline ?? false,
+    isLive: p.isLive ?? false,
+    startingPrice: p.services?.[0]?.price ?? 0,
+    services: p.services ?? [],
+    portfolio: p.portfolio ?? [],
+    reviews: p.reviews ?? [],
+  }));
+
+  const source = allFeatured && allFeatured.length > 0 ? allFeatured : fallbackFeatured;
+
+  const filtered =
+    activeFilter === "all"
+      ? source.slice(0, 6)
+      : source.filter((p) => p.category === activeFilter).slice(0, 6);
 
   return (
     <section className="py-12 md:py-20">

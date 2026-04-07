@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { getSierraLeoneLocations } from "@/lib/locations";
+import { ThemeLogo } from "@/components/layout/theme-logo";
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -108,8 +109,8 @@ export function AuthForms() {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-md border-border">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
-            <span className="text-xl font-bold text-primary-foreground">D</span>
+          <div className="mx-auto mb-2 flex items-center justify-center">
+            <ThemeLogo className="h-12" />
           </div>
           <CardTitle className="text-2xl font-bold text-foreground">Welcome to Dodo</CardTitle>
           <CardDescription>

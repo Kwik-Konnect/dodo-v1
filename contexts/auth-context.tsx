@@ -8,6 +8,8 @@ type User = {
   name: string;
   email: string;
   isProfessional: boolean;
+  avatarUrl?: string;
+  coverImageUrl?: string;
   profile?: {
     bio: string;
     skills: string[];

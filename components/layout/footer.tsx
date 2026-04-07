@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Heart } from "lucide-react";
+import { ThemeLogo } from "@/components/layout/theme-logo";
 
 const footerLinks = {
   forClients: {
@@ -47,10 +50,7 @@ export function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-sm">
-                <span className="text-lg font-bold text-primary-foreground">D</span>
-              </div>
-              <span className="text-xl font-bold text-foreground">Dodo</span>
+              <ThemeLogo className="h-9" />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               Connecting you with talented women professionals across the globe.
