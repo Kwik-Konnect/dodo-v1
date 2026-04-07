@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 // ─── Follows ──────────────────────────────────────────────────────────────────
 
@@ -53,6 +54,73 @@ export const unfollowUser = mutation({
   },
 });
 
+// Alternative mutations that accept string IDs
+export const followUserByIds = mutation({
+  args: {
+    followerId: v.string(),
+    followingId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const followerId = args.followerId as any; // Let Convex handle ID conversion
+      const followingId = args.followingId as any; // Let Convex handle ID conversion
+      
+      if (followerId === followingId) {
+        throw new Error("Cannot follow yourself");
+      }
+
+      const existing = await ctx.db
+        .query("follows")
+        .withIndex("by_follower_and_following", (q) =>
+          q.eq("followerId", followerId).eq("followingId", followingId)
+        )
+        .unique();
+
+      if (existing) return { alreadyFollowing: true };
+
+      await ctx.db.insert("follows", {
+        followerId,
+        followingId,
+        createdAt: Date.now(),
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('Invalid ID format:', error);
+      throw error;
+    }
+  },
+});
+
+export const unfollowUserByIds = mutation({
+  args: {
+    followerId: v.string(),
+    followingId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const followerId = args.followerId as any; // Let Convex handle ID conversion
+      const followingId = args.followingId as any; // Let Convex handle ID conversion
+      
+      const existing = await ctx.db
+        .query("follows")
+        .withIndex("by_follower_and_following", (q) =>
+          q.eq("followerId", followerId).eq("followingId", followingId)
+        )
+        .unique();
+
+      if (existing) {
+        await ctx.db.delete(existing._id);
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Invalid ID format:', error);
+      throw error;
+    }
+  },
+});
+
 export const isFollowing = query({
   args: {
     followerId: v.id("users"),
@@ -67,6 +135,32 @@ export const isFollowing = query({
       .unique();
 
     return !!follow;
+  },
+});
+
+// Alternative query that accepts string IDs for URL params
+export const isFollowingByIds = query({
+  args: {
+    followerId: v.string(),
+    followingId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const followerId = args.followerId as any; // Let Convex handle ID conversion
+      const followingId = args.followingId as any; // Let Convex handle ID conversion
+      
+      const follow = await ctx.db
+        .query("follows")
+        .withIndex("by_follower_and_following", (q) =>
+          q.eq("followerId", followerId).eq("followingId", followingId)
+        )
+        .unique();
+
+      return !!follow;
+    } catch (error) {
+      console.error('Invalid ID format:', error);
+      return false;
+    }
   },
 });
 
@@ -203,6 +297,60 @@ export const getLikedProfiles = query({
       .take(200);
 
     return likes.map((l) => l.professionalId);
+  },
+});
+
+export const getLikedProfessionalsData = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const likes = await ctx.db
+      .query("profileLikes")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .take(200);
+
+    const results = await Promise.all(
+      likes.map(async (like) => {
+        // Numeric IDs belong to static JSON — handled client-side
+        if (/^\d+$/.test(like.professionalId)) return null;
+
+        const user = await ctx.db.get(
+          like.professionalId as unknown as Id<"users">
+        );
+        if (!user || !user.isProfessional) return null;
+
+        return {
+          id: user._id as string,
+          name: user.name,
+          title: user.title ?? "",
+          avatar: user.avatarUrl ?? "",
+          coverImage: user.coverImageUrl ?? "",
+          bio: user.bio ?? "",
+          category: (user.category ?? "companions") as any,
+          skills: user.skills ?? [],
+          location: user.location ?? "",
+          ethnicity: user.ethnicity ?? "",
+          rating: user.rating ?? 0,
+          reviewCount: user.reviewCount ?? 0,
+          yearsExperience: user.yearsExperience ?? 0,
+          availability: user.availability ?? "",
+          languages: user.languages ?? [],
+          verified: user.verified ?? false,
+          age: user.age ?? 0,
+          bodyType: user.bodyType ?? "",
+          interests: user.interests ?? [],
+          isOnline: user.isOnline ?? false,
+          isLive: user.isLive ?? false,
+          startingPrice: user.startingPrice ?? 0,
+          services: user.startingPrice
+            ? [{ id: "price", name: "", description: "", price: user.startingPrice, duration: "" }]
+            : [],
+          portfolio: [] as any[],
+          reviews: [] as any[],
+        };
+      })
+    );
+
+    return results.filter((r) => r !== null);
   },
 });
 

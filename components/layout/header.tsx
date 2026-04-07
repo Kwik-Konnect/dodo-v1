@@ -291,6 +291,7 @@ export function Header() {
                 <Link href="/feeds" className="rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground" onClick={() => setIsOpen(false)}>Feed</Link>
                 <Link href="/messages" className="rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground" onClick={() => setIsOpen(false)}>Messages</Link>
                 <Link href="/how-it-works" className="rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground" onClick={() => setIsOpen(false)}>How It Works</Link>
+                <Link href="/contact" className="rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground" onClick={() => setIsOpen(false)}>Contact</Link>
 
                 <div className="my-2 border-t border-sidebar-border" />
                 <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Categories</p>

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +27,6 @@ import {
 } from "@/components/professional-card";
 import { getCategoryById } from "@/lib/data";
 import { formatPrice } from "@/lib/currency";
-import { SwipeView } from "@/components/browse/swipe-view";
 import { SlidersHorizontal, Search, X, LayoutGrid, Flame } from "lucide-react";
 import type { Category } from "@/lib/types";
 import professionalsData from "@/data/professionals.json";
@@ -36,7 +36,6 @@ function BrowseContent() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sortBy, setSortBy] = useState("rating");
   const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
-  const [viewMode, setViewMode] = useState<"grid" | "swipe">("grid");
 
   // Get filter values from URL
   const category = searchParams.get("category") as Category | null;
@@ -59,8 +58,14 @@ function BrowseContent() {
 
   // Client-side sort
   const professionals = useMemo(() => {
-    const source = rawProfessionals ?? fallbackProfessionals;
-    if (!source) return [];
+    // Only use static fallback when Convex returned an empty array (no seeded data),
+    // NOT while it's still loading (undefined) — loading shows skeletons instead.
+    const source =
+      rawProfessionals === undefined
+        ? []
+        : rawProfessionals.length > 0
+          ? rawProfessionals
+          : fallbackProfessionals;
     const results = [...source];
     switch (sortBy) {
       case "rating":
@@ -122,7 +127,7 @@ function BrowseContent() {
                 {category ? getCategoryById(category)?.name : "Discover"}
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                {rawProfessionals === undefined && fallbackProfessionals.length === 0 ? (
+                {rawProfessionals === undefined ? (
                   <span className="inline-flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-primary/70" />
                     Loading results...
@@ -135,29 +140,15 @@ function BrowseContent() {
               </p>
             </div>
             {/* View Toggle */}
-            <div className="flex items-center gap-1 rounded-full border border-border bg-muted/30 p-1">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-                  viewMode === "grid"
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
+            <div className="flex items-center gap-1">
+              <button className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all bg-primary text-primary-foreground shadow-sm">
                 <LayoutGrid className="h-3.5 w-3.5" />
                 Grid
               </button>
-              <button
-                onClick={() => setViewMode("swipe")}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-                  viewMode === "swipe"
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
+              <Link href="/swipe" className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all bg-primary text-primary-foreground shadow-sm">
                 <Flame className="h-3.5 w-3.5" />
                 Swipe
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -262,22 +253,18 @@ function BrowseContent() {
             )}
 
             {/* Results */}
-            {rawProfessionals === undefined && fallbackProfessionals.length === 0 ? (
+            {rawProfessionals === undefined ? (
               <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, idx) => (
                   <ProfessionalCardSkeleton key={idx} />
                 ))}
               </div>
             ) : professionals.length > 0 ? (
-              viewMode === "swipe" ? (
-                <SwipeView professionals={professionals} />
-              ) : (
-                <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                  {professionals.map((professional) => (
-                    <ProfessionalCard key={professional.id} professional={professional} />
-                  ))}
-                </div>
-              )
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {professionals.map((professional) => (
+                  <ProfessionalCard key={professional.id} professional={professional} />
+                ))}
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <div className="rounded-full bg-muted p-6">

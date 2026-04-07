@@ -11,7 +11,7 @@ import { Id } from "@/convex/_generated/dataModel";
 
 interface ProfileLikeButtonProps {
   professionalId: string;
-  variant?: "default" | "ghost" | "compact";
+  variant?: "default" | "ghost" | "compact" | "swipe";
   className?: string;
 }
 
@@ -71,6 +71,26 @@ export function ProfileLikeButton({
           className={cn(
             "h-7 w-7 transition-colors",
             liked ? "fill-primary text-primary" : "text-white"
+          )}
+        />
+      </button>
+    );
+  }
+
+  if (variant === "swipe") {
+    return (
+      <button
+        onClick={handleToggle}
+        className={cn(
+          "h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all active:scale-90 flex items-center justify-center",
+          className
+        )}
+        aria-label={liked ? "Unlike" : "Like"}
+      >
+        <Heart
+          className={cn(
+            "h-6 w-6 transition-colors",
+            liked ? "fill-white text-white" : "text-white"
           )}
         />
       </button>

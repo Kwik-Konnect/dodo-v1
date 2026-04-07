@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import professionalsData from "@/data/professionals.json";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProfileHeader } from "@/components/profile/profile-header";
@@ -25,11 +26,22 @@ interface PageProps {
 export default function ProfessionalPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
-  const professional = useQuery(api.professionals.getProfessionalProfile, {
-    userId: id as Id<"users">,
-  });
 
-  // undefined = loading, null = not found
+  // Numeric IDs (e.g. "1", "2") are from the static JSON fallback — skip Convex.
+  const isConvexId = !/^\d+$/.test(id);
+
+  const convexProfessional = useQuery(
+    api.professionals.getProfessionalProfileById,
+    isConvexId ? { id } : "skip"
+  );
+
+  const staticProfessional = isConvexId
+    ? null
+    : ((professionalsData as any[]).find((p) => p.id === id) ?? null);
+
+  const professional = isConvexId ? convexProfessional : staticProfessional;
+
+  // undefined = Convex still loading, null = not found in either source
   if (professional === null) {
     notFound();
   }
@@ -53,7 +65,7 @@ export default function ProfessionalPage({ params }: PageProps) {
   };
 
   const minPrice = professional.services.length > 0
-    ? Math.min(...professional.services.map((s) => s.price))
+    ? Math.min(...professional.services.map((s: { price: number }) => s.price))
     : 0;
 
   return (

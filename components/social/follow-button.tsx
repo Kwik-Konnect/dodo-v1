@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { Id } from "@/convex/_generated/dataModel";
 
 interface FollowButtonProps {
-  targetUserId: Id<"users">;
+  targetUserId: string; // Changed from Id<"users"> to string
   size?: "sm" | "default" | "lg";
   className?: string;
 }
@@ -24,17 +24,17 @@ export function FollowButton({
   const [optimistic, setOptimistic] = useState<boolean | null>(null);
 
   const isFollowing = useQuery(
-    api.social.isFollowing,
+    api.social.isFollowingByIds,
     user
       ? {
-          followerId: user.id as Id<"users">,
-          followingId: targetUserId,
+          followerId: user.id as string,
+          followingId: targetUserId as string,
         }
       : "skip"
   );
 
-  const followUser = useMutation(api.social.followUser);
-  const unfollowUser = useMutation(api.social.unfollowUser);
+  const followUser = useMutation(api.social.followUserByIds);
+  const unfollowUser = useMutation(api.social.unfollowUserByIds);
 
   if (!user || user.id === targetUserId) return null;
 
@@ -51,12 +51,12 @@ export function FollowButton({
     try {
       if (following) {
         await unfollowUser({
-          followerId: user.id as Id<"users">,
+          followerId: user.id as string,
           followingId: targetUserId,
         });
       } else {
         await followUser({
-          followerId: user.id as Id<"users">,
+          followerId: user.id as string,
           followingId: targetUserId,
         });
       }

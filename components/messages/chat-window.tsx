@@ -87,40 +87,40 @@ export function ChatWindow({ conversationId, otherUser, onBack }: ChatWindowProp
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-3">
+      <div className="flex items-center gap-3 border-b border-border bg-card px-3 py-2.5 lg:px-4 lg:py-3 shrink-0">
         {onBack && (
           <Button
             variant="ghost"
             size="icon"
             onClick={onBack}
-            className="h-8 w-8 rounded-full lg:hidden"
+            className="h-8 w-8 rounded-full"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
         )}
-        <Avatar className="h-9 w-9 border border-border">
+        <Avatar className="h-8 w-8 lg:h-9 lg:w-9 border border-border">
           <AvatarImage src={otherUser.avatarUrl} />
           <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
             {otherUser.name[0]?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <p className="text-sm font-semibold text-foreground">{otherUser.name}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-foreground truncate">{otherUser.name}</p>
           <p className="text-xs text-muted-foreground">Active recently</p>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-1">
+      <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-1">
         {!messages ? (
           <div className="flex justify-center py-8">
             <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Avatar className="h-16 w-16 border-2 border-border">
+          <div className="flex flex-col items-center justify-center py-8 lg:py-12 text-center px-4">
+            <Avatar className="h-12 w-12 lg:h-16 lg:w-16 border-2 border-border">
               <AvatarImage src={otherUser.avatarUrl} />
-              <AvatarFallback className="bg-primary/10 text-primary text-xl font-bold">
+              <AvatarFallback className="bg-primary/10 text-primary text-lg lg:text-xl font-bold">
                 {otherUser.name[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
@@ -149,11 +149,11 @@ export function ChatWindow({ conversationId, otherUser, onBack }: ChatWindowProp
                   )}
                 >
                   {!isOwn && (
-                    <div className="w-7 shrink-0">
+                    <div className="w-6 lg:w-7 shrink-0">
                       {showAvatar && (
-                        <Avatar className="h-7 w-7 border border-border">
+                        <Avatar className="h-6 w-6 lg:h-7 lg:w-7 border border-border">
                           <AvatarImage src={otherUser.avatarUrl} />
-                          <AvatarFallback className="text-[10px] bg-primary/10 text-primary">
+                          <AvatarFallback className="text-[9px] lg:text-[10px] bg-primary/10 text-primary">
                             {otherUser.name[0]?.toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
@@ -163,13 +163,13 @@ export function ChatWindow({ conversationId, otherUser, onBack }: ChatWindowProp
 
                   <div
                     className={cn(
-                      "group flex flex-col gap-0.5 max-w-[70%]",
+                      "group flex flex-col gap-0.5 max-w-[75%] lg:max-w-[70%]",
                       isOwn && "items-end"
                     )}
                   >
                     <div
                       className={cn(
-                        "rounded-2xl px-3.5 py-2 text-sm leading-relaxed",
+                        "rounded-2xl px-3 py-1.5 lg:px-3.5 lg:py-2 text-sm leading-relaxed break-words",
                         isOwn
                           ? "rounded-br-sm bg-primary text-primary-foreground"
                           : "rounded-bl-sm bg-muted text-foreground"
@@ -177,7 +177,7 @@ export function ChatWindow({ conversationId, otherUser, onBack }: ChatWindowProp
                     >
                       {msg.content}
                     </div>
-                    <span className="text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity px-1">
+                    <span className="text-[9px] lg:text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity px-1">
                       {formatTime(msg.createdAt)}
                       {isOwn && (
                         <span className="ml-1">
@@ -195,7 +195,7 @@ export function ChatWindow({ conversationId, otherUser, onBack }: ChatWindowProp
       </div>
 
       {/* Input */}
-      <div className="border-t border-border bg-card p-3">
+      <div className="border-t border-border bg-card p-2.5 lg:p-3">
         <div className="flex items-center gap-2">
           <Input
             ref={inputRef}
@@ -203,19 +203,19 @@ export function ChatWindow({ conversationId, otherUser, onBack }: ChatWindowProp
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type a message..."
-            className="rounded-full bg-muted/60 border-border text-sm"
+            className="rounded-full bg-muted/60 border-border text-sm text-base lg:text-sm"
             maxLength={1000}
           />
           <Button
             size="icon"
             onClick={handleSend}
             disabled={!input.trim() || isSending}
-            className="h-9 w-9 shrink-0 rounded-full"
+            className="h-8 w-8 lg:h-9 lg:w-9 shrink-0 rounded-full"
           >
             {isSending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-3.5 w-3.5 lg:h-4 lg:w-4 animate-spin" />
             ) : (
-              <Send className="h-4 w-4" />
+              <Send className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
             )}
           </Button>
         </div>

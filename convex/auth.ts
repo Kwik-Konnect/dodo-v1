@@ -155,6 +155,45 @@ export const updateUserImages = mutation({
   },
 });
 
+export const searchUsers = query({
+  args: {
+    query: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { query } = args;
+    
+    // Search by email or phone number
+    const emailResults = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => 
+        q.eq("email", query.toLowerCase())
+      )
+      .take(5);
+
+    // If no email match, fall back to searching the top-level phone field
+    if (emailResults.length === 0) {
+      const phoneResults = await ctx.db
+        .query("users")
+        .filter((q) => q.eq(q.field("phone"), query))
+        .take(5);
+
+      return phoneResults.map((user) => ({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatarUrl: user.avatarUrl,
+      }));
+    }
+
+    return emailResults.map((user) => ({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+    }));
+  },
+});
+
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(password);

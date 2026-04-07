@@ -1,0 +1,135 @@
+{
+  "districts": [
+    {
+      "name": "Western Area",
+      "areas": [
+        "Freetown Central",
+        "Freetown East",
+        "Freetown West",
+        "Aberdeen",
+        "Hill Station",
+        "Wilberforce",
+        "Congo Town",
+        "Juba Hill",
+        "Lumley",
+        "Goderich",
+        "Kissy",
+        "Fourah Bay",
+        "Murray Town",
+        "Regent",
+        "Leicester",
+        "Brookfields",
+        "New England",
+        "Tengbeh Town",
+        "Cline Town",
+        "East End",
+        "Kroo Bay"
+      ]
+    },
+    {
+      "name": "Bombali",
+      "areas": [
+        "Makeni",
+        "Bombali Sebora",
+        "Paki Masabong",
+        "Safroko Limba"
+      ]
+    },
+    {
+      "name": "Bo",
+      "areas": [
+        "Bo Town",
+        "Kakua",
+        "Tikonko",
+        "Valunia"
+      ]
+    },
+    {
+      "name": "Bonthe",
+      "areas": [
+        "Bonthe Town",
+        "Sherbro Island",
+        "Mattru Jong"
+      ]
+    },
+    {
+      "name": "Kailahun",
+      "areas": [
+        "Kailahun Town",
+        "Kenema Highway",
+        "Pendembu"
+      ]
+    },
+    {
+      "name": "Kambia",
+      "areas": [
+        "Kambia Town",
+        "Gbinleh-Dixon",
+        "Magbema"
+      ]
+    },
+    {
+      "name": "Kenema",
+      "areas": [
+        "Kenema Town",
+        "Nongowa",
+        "Small Bo",
+        "Tunkia"
+      ]
+    },
+    {
+      "name": "Koinadugu",
+      "areas": [
+        "Kabala",
+        "Diang",
+        "Mongo",
+        "Neya"
+      ]
+    },
+    {
+      "name": "Kono",
+      "areas": [
+        "Koidu Town",
+        "Gbense",
+        "Nimikoro",
+        "Sandor"
+      ]
+    },
+    {
+      "name": "Moyamba",
+      "areas": [
+        "Moyamba Town",
+        "Bagruwa",
+        "Bumpe Ngao",
+        "Kagboro"
+      ]
+    },
+    {
+      "name": "Port Loko",
+      "areas": [
+        "Port Loko Town",
+        "Bureh-Kasseh-Maconteh",
+        "Kaffu Bullom",
+        "Lokomasama"
+      ]
+    },
+    {
+      "name": "Pujehun",
+      "areas": [
+        "Pujehun Town",
+        "Barri",
+        "Gallinas-Perri",
+        "Kpaka"
+      ]
+    },
+    {
+      "name": "Tonkolili",
+      "areas": [
+        "Magburaka",
+        "Gbonkolenken",
+        "Kholifa Mabang",
+        "Yoni"
+      ]
+    }
+  ]
+}

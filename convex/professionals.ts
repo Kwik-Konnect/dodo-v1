@@ -65,21 +65,21 @@ export const listProfessionals = query({
       skills: p.skills ?? [],
       location: p.location ?? "",
       ethnicity: p.ethnicity ?? "",
-      rating: p.rating ?? 0,
-      reviewCount: p.reviewCount ?? 0,
-      yearsExperience: p.yearsExperience ?? 0,
-      availability: p.availability ?? "",
-      languages: p.languages ?? [],
-      verified: p.verified ?? false,
-      age: p.age ?? 0,
-      bodyType: p.bodyType ?? "",
-      interests: p.interests ?? [],
-      isOnline: p.isOnline ?? false,
-      isLive: p.isLive ?? false,
-      startingPrice: p.startingPrice ?? 0,
+      rating: (p as any).rating ?? 0,
+      reviewCount: (p as any).reviewCount ?? 0,
+      yearsExperience: (p as any).yearsExperience ?? 0,
+      availability: (p as any).availability ?? "",
+      languages: (p as any).languages ?? [],
+      verified: (p as any).verified ?? false,
+      age: (p as any).age ?? 0,
+      bodyType: (p as any).bodyType ?? "",
+      interests: (p as any).interests ?? [],
+      isOnline: (p as any).isOnline ?? false,
+      isLive: (p as any).isLive ?? false,
+      startingPrice: (p as any).startingPrice ?? 0,
       // Services array is needed for ProfessionalCard price display — kept minimal here
-      services: p.startingPrice
-        ? [{ id: "price", name: "", description: "", price: p.startingPrice, duration: "" }]
+      services: (p as any).startingPrice
+        ? [{ id: "price", name: "", description: "", price: (p as any).startingPrice, duration: "" }]
         : [],
       portfolio: [] as any[],
       reviews: [] as any[],
@@ -97,7 +97,7 @@ export const getFeaturedProfessionals = query({
       .take(60);
 
     return pros
-      .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+      .sort((a, b) => ((b as any).rating ?? 0) - ((a as any).rating ?? 0))
       .slice(0, limit)
       .map((p) => ({
         id: p._id as string,
@@ -110,20 +110,20 @@ export const getFeaturedProfessionals = query({
         skills: p.skills ?? [],
         location: p.location ?? "",
         ethnicity: p.ethnicity ?? "",
-        rating: p.rating ?? 0,
-        reviewCount: p.reviewCount ?? 0,
-        yearsExperience: p.yearsExperience ?? 0,
-        availability: p.availability ?? "",
-        languages: p.languages ?? [],
-        verified: p.verified ?? false,
-        age: p.age ?? 0,
-        bodyType: p.bodyType ?? "",
-        interests: p.interests ?? [],
-        isOnline: p.isOnline ?? false,
-        isLive: p.isLive ?? false,
-        startingPrice: p.startingPrice ?? 0,
-        services: p.startingPrice
-          ? [{ id: "price", name: "", description: "", price: p.startingPrice, duration: "" }]
+        rating: (p as any).rating ?? 0,
+        reviewCount: (p as any).reviewCount ?? 0,
+        yearsExperience: (p as any).yearsExperience ?? 0,
+        availability: (p as any).availability ?? "",
+        languages: (p as any).languages ?? [],
+        verified: (p as any).verified ?? false,
+        age: (p as any).age ?? 0,
+        bodyType: (p as any).bodyType ?? "",
+        interests: (p as any).interests ?? [],
+        isOnline: (p as any).isOnline ?? false,
+        isLive: (p as any).isLive ?? false,
+        startingPrice: (p as any).startingPrice ?? 0,
+        services: (p as any).startingPrice
+          ? [{ id: "price", name: "", description: "", price: (p as any).startingPrice, duration: "" }]
           : [],
         portfolio: [] as any[],
         reviews: [] as any[],
@@ -164,17 +164,17 @@ export const getProfessionalProfile = query({
       skills: user.skills ?? [],
       location: user.location ?? "",
       ethnicity: user.ethnicity ?? "",
-      rating: user.rating ?? 0,
-      reviewCount: user.reviewCount ?? 0,
-      yearsExperience: user.yearsExperience ?? 0,
-      availability: user.availability ?? "",
-      languages: user.languages ?? [],
-      verified: user.verified ?? false,
-      age: user.age ?? 0,
-      bodyType: user.bodyType ?? "",
-      interests: user.interests ?? [],
-      isOnline: user.isOnline ?? false,
-      isLive: user.isLive ?? false,
+      rating: (user as any).rating ?? 0,
+      reviewCount: (user as any).reviewCount ?? 0,
+      yearsExperience: (user as any).yearsExperience ?? 0,
+      availability: (user as any).availability ?? "",
+      languages: (user as any).languages ?? [],
+      verified: (user as any).verified ?? false,
+      age: (user as any).age ?? 0,
+      bodyType: (user as any).bodyType ?? "",
+      interests: (user as any).interests ?? [],
+      isOnline: (user as any).isOnline ?? false,
+      isLive: (user as any).isLive ?? false,
       services: services.map((s) => ({
         id: s._id as string,
         name: s.name,
@@ -198,6 +198,78 @@ export const getProfessionalProfile = query({
         date: r.reviewedAt,
       })),
     };
+  },
+});
+
+// Query that accepts a Convex user ID from URL params.
+// Numeric / static-JSON IDs are handled client-side and never reach this function.
+export const getProfessionalProfileById = query({
+  args: { id: v.id("users") },
+  handler: async (ctx, args) => {
+    const userId = args.id;
+    const user = await ctx.db.get(userId);
+    if (!user || !user.isProfessional) return null;
+
+      const [services, portfolioItems, reviewItems] = await Promise.all([
+        ctx.db
+          .query("professionalServices")
+          .withIndex("by_provider", (q) => q.eq("providerId", userId))
+          .take(20),
+        ctx.db
+          .query("portfolio")
+          .withIndex("by_user", (q) => q.eq("userId", userId))
+          .take(20),
+        ctx.db
+          .query("professionalReviews")
+          .withIndex("by_provider", (q) => q.eq("providerId", userId))
+          .take(20),
+      ]);
+
+      return {
+        id: user._id as string,
+        name: user.name,
+        title: user.title ?? "",
+        avatar: user.avatarUrl ?? "",
+        coverImage: user.coverImageUrl ?? "",
+        bio: user.bio ?? "",
+        category: (user.category ?? "companions") as any,
+        skills: user.skills ?? [],
+        location: user.location ?? "",
+        ethnicity: user.ethnicity ?? "",
+        rating: user.rating ?? 0,
+        reviewCount: user.reviewCount ?? 0,
+        yearsExperience: user.yearsExperience ?? 0,
+        availability: user.availability ?? "",
+        languages: user.languages ?? [],
+        verified: user.verified ?? false,
+        age: user.age ?? 0,
+        bodyType: user.bodyType ?? "",
+        interests: user.interests ?? [],
+        isOnline: user.isOnline ?? false,
+        isLive: user.isLive ?? false,
+        services: services.map((s) => ({
+          id: s._id as string,
+          name: s.name,
+          description: s.description,
+          price: s.price,
+          duration: s.duration,
+        })),
+        portfolio: portfolioItems.map((p) => ({
+          id: p._id as string,
+          imageUrl: p.imageUrl,
+          title: p.title,
+          description: p.description,
+        })),
+        reviews: reviewItems.map((r) => ({
+          id: r._id as string,
+          userId: "",
+          userName: r.reviewerName,
+          userAvatar: r.reviewerAvatar ?? "",
+          rating: r.rating,
+          comment: r.comment,
+          date: r.reviewedAt,
+        })),
+      };
   },
 });
 

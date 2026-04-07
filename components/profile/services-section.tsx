@@ -41,6 +41,7 @@ export function ServicesSection({ services, onSelectService }: ServicesSectionPr
                 size="sm"
                 className="rounded-full"
                 onClick={() => onSelectService(service)}
+                disabled={true}
               >
                 Book Now
               </Button>

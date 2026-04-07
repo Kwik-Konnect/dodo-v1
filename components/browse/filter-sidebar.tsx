@@ -8,7 +8,9 @@ import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -18,7 +20,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { getCategories, getUniqueLocations, getUniqueEthnicities } from "@/lib/data";
+import { getCategories, getUniqueEthnicities } from "@/lib/data";
+import { getSierraLeoneDistricts } from "@/lib/locations";
 import { formatPrice } from "@/lib/currency";
 import { X } from "lucide-react";
 import type { Category } from "@/lib/types";
@@ -43,7 +46,7 @@ export function FilterSidebar({
   const router = useRouter();
   const searchParams = useSearchParams();
   const categories = getCategories();
-  const locations = getUniqueLocations();
+  const districts = getSierraLeoneDistricts();
   const ethnicities = getUniqueEthnicities();
 
   const updateFilter = (key: string, value: string | number | null) => {
@@ -137,10 +140,15 @@ export function FilterSidebar({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All locations</SelectItem>
-                  {locations.map((location) => (
-                    <SelectItem key={location} value={location}>
-                      {location}
-                    </SelectItem>
+                  {districts.map((district) => (
+                    <SelectGroup key={district.name}>
+                      <SelectLabel>{district.name}</SelectLabel>
+                      {district.areas.map((area) => (
+                        <SelectItem key={area} value={area}>
+                          {area}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   ))}
                 </SelectContent>
               </Select>

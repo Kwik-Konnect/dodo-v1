@@ -18,6 +18,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { getSierraLeoneLocations } from "@/lib/locations";
 import { ThemeLogo } from "@/components/layout/theme-logo";
+import { SuccessPopup } from "@/components/ui/success-popup";
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -41,6 +42,7 @@ type SignInFormData = z.infer<typeof signInSchema>;
 
 export function AuthForms() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const { signIn } = useAuth();
   const signUpMutation = useMutation(api.auth.signUp);
   const signInMutation = useMutation(api.auth.signIn);
@@ -68,14 +70,40 @@ export function AuthForms() {
   const onSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
     try {
+      // Create account
       await signUpMutation({
         name: data.name,
         email: data.email,
         password: data.password,
         isProfessional: data.isProfessional,
+        location: data.location,
       });
-      toast.success("Account created successfully! Please sign in.");
-      signUpForm.reset();
+
+      // Auto-login after successful signup
+      const signInResult = await signInMutation({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (signInResult.success) {
+        // Show success popup
+        setShowSuccessPopup(true);
+        
+        // Sign in the user
+        signIn(signInResult.user);
+        
+        // Redirect to profile page or return URL after popup
+        const returnTo = new URLSearchParams(window.location.search).get("returnTo");
+        const redirectUrl = returnTo || "/profile";
+        
+        // Redirect after popup closes
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 3500);
+      } else {
+        toast.error("Account created but failed to auto-login. Please sign in manually.");
+        signUpForm.reset();
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to create account");
     } finally {
@@ -283,6 +311,13 @@ export function AuthForms() {
           </Tabs>
         </CardContent>
       </Card>
+      
+      {/* Success Popup */}
+      <SuccessPopup
+        show={showSuccessPopup}
+        message="Welcome to Dodo! Your account has been created successfully."
+        onClose={() => setShowSuccessPopup(false)}
+      />
     </div>
   );
 }

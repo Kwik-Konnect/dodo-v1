@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { useAuth } from "@/contexts/auth-context";
 import { FeedPost } from "@/components/social/feed-post";
 import { FollowButton } from "@/components/social/follow-button";
+import { ProfessionalCard } from "@/components/professional-card";
+import professionalsData from "@/data/professionals.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -87,8 +89,13 @@ function ProfileContent() {
       : "skip"
   );
 
-  const likedPosts = useQuery(
-    api.posts.getLikedPosts,
+  // Liked profiles: IDs (for static-JSON lookup) + Convex user data
+  const likedProfileIds = useQuery(
+    api.social.getLikedProfiles,
+    user ? { userId: user.id as Id<"users"> } : "skip"
+  );
+  const likedConvexProfessionals = useQuery(
+    api.social.getLikedProfessionalsData,
     user ? { userId: user.id as Id<"users"> } : "skip"
   );
 
@@ -101,6 +108,16 @@ function ProfileContent() {
     api.social.getFollowing,
     user ? { userId: user.id as Id<"users"> } : "skip"
   );
+
+  // Merge static-JSON matches + Convex user matches into one list
+  const likedProfessionals = useMemo(() => {
+    if (!likedProfileIds) return undefined;
+    const staticMatches = likedProfileIds
+      .filter((id) => /^\d+$/.test(id))
+      .map((id) => (professionalsData as any[]).find((p) => p.id === id))
+      .filter(Boolean);
+    return [...staticMatches, ...(likedConvexProfessionals ?? [])];
+  }, [likedProfileIds, likedConvexProfessionals]);
 
   if (!user) return null;
 
@@ -305,7 +322,7 @@ function ProfileContent() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Posts */}
+        {/* Posts — only the user's own posts */}
         <TabsContent value="posts" className="mt-4 space-y-4">
           {!posts ? (
             <div className="flex justify-center py-8">
@@ -344,16 +361,16 @@ function ProfileContent() {
           )}
         </TabsContent>
 
-        {/* Liked posts */}
-        <TabsContent value="liked" className="mt-4 space-y-4">
-          {!likedPosts ? (
+        {/* Liked — professionals the user has liked */}
+        <TabsContent value="liked" className="mt-4">
+          {!likedProfessionals ? (
             <div className="flex justify-center py-8">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
-          ) : likedPosts.length === 0 ? (
+          ) : likedProfessionals.length === 0 ? (
             <EmptyState
               icon={<Heart className="h-10 w-10 text-muted-foreground/40" />}
-              message="No liked posts yet"
+              message="No liked profiles yet"
             >
               <Button
                 variant="outline"
@@ -361,13 +378,15 @@ function ProfileContent() {
                 className="mt-3 rounded-full"
                 asChild
               >
-                <Link href="/feeds">Browse posts</Link>
+                <Link href="/browse">Browse profiles</Link>
               </Button>
             </EmptyState>
           ) : (
-            likedPosts.map((post) => (
-              <FeedPost key={post._id} post={post as any} />
-            ))
+            <div className="grid gap-4 sm:grid-cols-2">
+              {likedProfessionals.map((professional) => (
+                <ProfessionalCard key={professional.id} professional={professional} />
+              ))}
+            </div>
           )}
         </TabsContent>
 
