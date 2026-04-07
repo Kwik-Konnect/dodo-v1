@@ -17,9 +17,10 @@ export function ProtectedRoute({ children, requireProfessional = false }: Protec
   useEffect(() => {
     if (!isLoading) {
       if (!user) {
-        router.push("/auth");
+        const returnTo = encodeURIComponent(window.location.pathname + window.location.search);
+        router.push(`/auth?returnTo=${returnTo}`);
       } else if (requireProfessional && !user.isProfessional) {
-        router.push("/"); // Redirect non-professionals to home
+        router.push("/");
       }
     }
   }, [user, isLoading, router, requireProfessional]);

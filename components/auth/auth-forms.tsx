@@ -93,7 +93,9 @@ export function AuthForms() {
       if (result.success) {
         toast.success("Signed in successfully!");
         signIn(result.user);
-        // TODO: Redirect to dashboard or home
+        // Redirect back to previous page or home
+        const returnTo = new URLSearchParams(window.location.search).get("returnTo");
+        window.location.href = returnTo || "/";
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to sign in");
@@ -103,12 +105,15 @@ export function AuthForms() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <Card className="w-full max-w-md border-border">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Welcome to Dodo</CardTitle>
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
+            <span className="text-xl font-bold text-primary-foreground">D</span>
+          </div>
+          <CardTitle className="text-2xl font-bold text-foreground">Welcome to Dodo</CardTitle>
           <CardDescription>
-            Connect with talented women professionals
+            Meet amazing women, chat & hang out
           </CardDescription>
         </CardHeader>
         <CardContent>

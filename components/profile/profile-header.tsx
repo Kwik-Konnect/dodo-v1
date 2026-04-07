@@ -36,10 +36,9 @@ export function ProfileHeader({ professional }: ProfileHeaderProps) {
   // In a real scenario these would be linked Convex accounts
   const handleChat = () => {
     if (!user) {
-      router.push("/auth");
+      router.push(`/auth?returnTo=${encodeURIComponent(`/messages/${professional.id}`)}`);
       return;
     }
-    // Start a DM thread with this professional
     router.push(`/messages/${professional.id}`);
   };
 
