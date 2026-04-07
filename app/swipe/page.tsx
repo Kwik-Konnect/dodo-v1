@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,7 @@ import { getProfessionals } from "@/lib/data";
 import { ProfileLikeButton } from "@/components/social/like-button";
 import { useAuth } from "@/contexts/auth-context";
 
-export default function SwipePage() {
+function SwipePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const professionals = getProfessionals();
@@ -293,5 +293,17 @@ export default function SwipePage() {
     <div className="fixed inset-0 z-50">
       {content}
     </div>
+  );
+}
+
+export default function SwipePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <SwipePageContent />
+    </Suspense>
   );
 }
